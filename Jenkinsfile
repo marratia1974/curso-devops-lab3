@@ -24,7 +24,7 @@ pipeline {
         DH_REPO    = "marratia1974/curso-devops-lab3"
         GHCR_REPO  = "ghcr.io/marratia1974/curso-devops-lab3"
         K8S_NAMESPACE  = "marratia"
-        K8S_DEPLOYMENT = "curso-devops-deployment"
+        K8S_DEPLOYMENT = "curso-devops-lab3-deployment"
         K8S_CONTAINER  = "contenedor-curso-devops-lab3"
 
 
