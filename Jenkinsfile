@@ -123,7 +123,7 @@ pipeline {
                 }
             }
             steps {
-                withCredentials([file(credentialsId: 'credential-k82', variable: 'KUBECONFIG')]) {
+                withCredentials([file(credentialsId: 'credencial-k9', variable: 'KUBECONFIG')]) {
                     sh """
                         kubectl -n ${env.K8S_NAMESPACE} set image deployment/${env.K8S_DEPLOYMENT} ${env.K8S_CONTAINER}=${env.GHCR_REPO}:${env.BUILD_NUMBER}
                         kubectl -n ${env.K8S_NAMESPACE} rollout status deployment/${env.K8S_DEPLOYMENT}
