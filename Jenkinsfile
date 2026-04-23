@@ -117,7 +117,7 @@ pipeline {
         stage("CD - Despliegue continuo en develop"){
             agent {
                 docker {
-                    image 'bitnami/kubectl:latest'
+                    image 'alpine/k8s:latest'
                     reuseNode true
                 }
             }
