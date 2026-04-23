@@ -114,28 +114,19 @@ pipeline {
                 }
             }
         }
-        stage("CD - Despliegue continuo en develop"){
+ 
+        stage("CD - Despliegue continuo en develop") {
             agent {
                 docker {
-                    image 'alpine/k8s:1.33.11'
+                    image 'alpine/k8s:1.34.6'
                     reuseNode true
                 }
             }
-            steps{
-                script {
-                    if (!env.APP_SEMANTIC_VERSION?.trim()) {
-                        error("APP_SEMANTIC_VERSION no definida para el despliegue")
-                    }
-                }
-                withKubeConfig([credentialsId: 'credencial-k82']) {
-
+            steps {
+                withCredentials([file(credentialsId: 'credencial-k', variable: 'KUBECONFIG')]) {
                     sh """
-                        kubectl config view
-                        kubectl config current-context
-                        kubectl config get-contexts
-                        kubectl get nodes
-
-
+                        kubectl -n ${env.K8S_NAMESPACE} set image deployment/${env.K8S_DEPLOYMENT} ${env.K8S_CONTAINER}=${env.GHCR_REPO}:${env.BUILD_NUMBER}
+                        kubectl -n ${env.K8S_NAMESPACE} rollout status deployment/${env.K8S_DEPLOYMENT}
                     """
                 }
             }
