@@ -9,7 +9,7 @@ contexts:
     cluster: docker-desktop
     user: docker-desktop
     name: docker-desktop
-current-context: docker-desktop
+current-context: 
 kind: Config
 users:
 - name: docker-desktop
