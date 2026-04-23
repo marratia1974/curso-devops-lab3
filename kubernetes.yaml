@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: marratia
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: curso-devops-lab3-config
+  namespace: marratia
+data:
+  USERNAME: "cmd"
+  ENDPOINT: "http://api.google.com/v1"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: curso-devops-lab3-secret
+  namespace: curso
+type: Opaque
+stringData:
+  APIKEY: "123456789abcde"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curso-devops-lab3-deployment
+  namespace: curso
+  labels:
+    app: curso-devops-lab3-stack
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: curso-devops-lab3-stack
+  template:
+    metadata:
+      labels:
+        app: curso-devops-lab3-stack
+    spec:
+      containers:
+      - name: contenedor-curso-devops-lab3
+        image: marratia1974/curso-devops-lab3
+        imagePullPolicy: Always
+        env:
+        - name: NODE_ENV
+          value: development
+        - name: PORT
+          value: "3000"
+        - name: USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: curso-devops-lab3-config
+              key: USERNAME
+              optional: true
+        - name: APIKEY
+          valueFrom:
+            secretKeyRef:
+              name: curso-devops-lab3-secret
+              key: APIKEY
+              optional: true
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: curso-devops-lab3-service
+  namespace: marratia
+  labels:
+    app: curso-devops-lab3-stack
+spec:
+  selector:
+     app: curso-devops-lab3-stack
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: curso-devops-lab3-ingress
+  namespace: marratia
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: app.devops.cl
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: curso-devops-lab3-service
+            port:
+              number: 80
