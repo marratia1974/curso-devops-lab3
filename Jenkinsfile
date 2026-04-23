@@ -117,7 +117,7 @@ pipeline {
         stage("CD - Despliegue continuo en develop"){
             agent {
                 docker {
-                    image 'alpine/k8s:1.34.6'
+                    image 'bitnami/kubectl:latest'
                     reuseNode true
                 }
             }
@@ -145,3 +145,4 @@ pipeline {
 
                         // kubectl -n ${env.K8S_NAMESPACE} set image deployment/${env.K8S_DEPLOYMENT} ${env.K8S_CONTAINER}=${env.DH_REPO}:${env.APP_SEMANTIC_VERSION}
                         // kubectl -n ${env.K8S_NAMESPACE} rollout status deployment/${env.K8S_DEPLOYMENT}
+                        //image 'alpine/k8s:1.34.6'
