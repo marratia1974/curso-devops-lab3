@@ -130,6 +130,8 @@ pipeline {
                 withKubeConfig([credentialsId: 'credencial-k82']) {
 
                     sh """
+                        kubectl config current-context
+                        kubectl get node
                         kubectl -n ${env.K8S_NAMESPACE} set image deployment/${env.K8S_DEPLOYMENT} ${env.K8S_CONTAINER}=${env.DH_REPO}:${env.APP_SEMANTIC_VERSION}
                         kubectl -n ${env.K8S_NAMESPACE} rollout status deployment/${env.K8S_DEPLOYMENT}
                     """
